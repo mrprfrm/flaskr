@@ -1,0 +1,13 @@
+version: '3'
+services:
+  server:
+    build: server
+    container_name: flaskr_server
+    command: poetry run python -m flask run --host=0.0.0.0 --port=8000
+    volumes:
+      - ./server:/home/python/app
+    environment:
+      - FLASK_APP=.
+      - FLASK_ENV=development
+    ports:
+      - 8000:8000
