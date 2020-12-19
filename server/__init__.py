@@ -3,6 +3,7 @@ import os
 from flask import Flask
 
 from .db import init_app
+from .auth import bluepirnt
 
 
 def create_app():
@@ -24,5 +25,6 @@ def create_app():
         return 'Hello word!'
 
     db.init_app(app)
+    app.register_blueprint(bluepirnt)
 
     return app

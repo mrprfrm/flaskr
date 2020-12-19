@@ -8,6 +8,7 @@ authors = ["Anton Petrov <marblemonolit@gmail.com>"]
 python = "^3.7"
 Flask = "^1.1.2"
 click = "^7.1.2"
+Werkzeug = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 
