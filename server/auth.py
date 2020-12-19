@@ -46,9 +46,9 @@ def register():
             error = f'User with username {username} already exists.'
 
         if error is None:
-            insert_query = 'INSERT INTO users (username, password) VALUES (?, ?)'
+            query = 'INSERT INTO users (username, password) VALUES (?, ?)'
             password_hash = generate_password_hash(password)
-            db.execute(insert_query, (username, password_hash))
+            db.execute(query, (username, password_hash))
             db.commit()
             return redirect(url_for('auth.login'))
         flash(error)
@@ -64,8 +64,8 @@ def login():
         db = get_db()
         error = None
 
-        select_query = 'SELECT * FROM users WHERE username = ?'
-        user = db.execute(select_query, (username,)).fetchone()
+        query = 'SELECT * FROM users WHERE username = ?'
+        user = db.execute(query, (username,)).fetchone()
 
         if user is None:
             error = 'Incorrect username.'
