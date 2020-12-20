@@ -1,10 +1,11 @@
 import functools
 
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
-
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .db import get_db
+from server.db import get_db
+
+from .forms import LoginForm, RegisterForm
 
 
 bluepirnt = Blueprint('auth', __name__, url_prefix='/auth')
@@ -31,54 +32,41 @@ def load_logged_in_user():
 
 @bluepirnt.route('/register', methods=('GET', 'POST'))
 def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
         db = get_db()
-        error = None
 
         select_query = 'SELECT id FROM users WHERE username = ?'
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
-        elif db.execute(select_query, (username,)).fetchone() is not None:
-            error = f'User with username {username} already exists.'
+        user = db.execute(select_query, (form.username.data,)).fetchone()
 
-        if error is None:
+        if user is None:
             query = 'INSERT INTO users (username, password) VALUES (?, ?)'
-            password_hash = generate_password_hash(password)
-            db.execute(query, (username, password_hash))
+            password_hash = generate_password_hash(form.password.data)
+            cursor = db.execute(query, (form.username.data, password_hash))
             db.commit()
-            return redirect(url_for('auth.login'))
-        flash(error)
+            session.clear()
+            session['user_id'] = cursor.lastrowid
+            return redirect(url_for('index'))
 
-    return render_template('auth/register.html')
+        flash(f'User with username {form.username.data} already exists.')
+    return render_template('auth/register.html', form=form)
 
 
 @bluepirnt.route('/login', methods=('GET', 'POST'))
 def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
         db = get_db()
-        error = None
-
         query = 'SELECT * FROM users WHERE username = ?'
-        user = db.execute(query, (username,)).fetchone()
+        user = db.execute(query, (form.username.data,)).fetchone()
 
-        if user is None:
-            error = 'Incorrect username.'
-        if not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
-
-        if error is None:
+        if user is not None and check_password_hash(user['password'], form.password.data):
             session.clear()
             session['user_id'] = user['id']
             return redirect(url_for('index'))
-        flash(error)
 
-    return render_template('auth/login.html')
+        flash('Incorrect username and password combination.')
+    return render_template('auth/login.html', form=form)
 
 
 @bluepirnt.route('/logout')

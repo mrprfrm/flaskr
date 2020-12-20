@@ -1,4 +1,5 @@
 {% extends 'master.html' %}
+{% from 'fields.html' import render_field %}
 
 {% block header %}
   <h1>{% block title %}New Post{% endblock %}</h1>
@@ -6,10 +7,12 @@
 
 {% block content %}
   <form method="post">
-    <label for="title">Title</label>
-    <input id="title" name="title" type="text" value="{{ request.form['title'] }}" required>
-    <label for="body">Body</label>
-    <textarea id="body" name="body">{{ request.form['body'] }}</textarea>
+    {{ form.csrf_token }}
+    {% for field in form %}
+      {% if not field.name == 'csrf_token' %}
+        {{ render_field(field) }}
+      {% endif %}
+    {% endfor %}
     <input type="submit" value="Save">
   </form>
 {% endblock %}
