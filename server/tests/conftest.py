@@ -3,7 +3,7 @@ import os
 import pytest
 import tempfile
 
-from server import create_app
+from application import create_app
 
 
 @pytest.fixture

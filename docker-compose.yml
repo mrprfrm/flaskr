@@ -7,7 +7,7 @@ services:
     volumes:
       - ./server:/home/python/server
     environment:
-      - FLASK_APP=.
+      - FLASK_APP=main.py:app
       - FLASK_ENV=development
     ports:
       - 8000:8000
