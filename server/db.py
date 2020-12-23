@@ -1,10 +1,12 @@
 import click
 from flask import g, abort
 from flask.cli import with_appcontext
+from flask_migrate import Migrate, MigrateCommand
 from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 def get_object_or_404(model, query=True):
@@ -33,7 +35,9 @@ def init_db_command():
 def init_app(app):
     with app.app_context():
         global db
+        global migrate
         db.init_app(app)
+        migrate.init_app(app, db)
         app.teardown_appcontext(close_db)
         app.cli.add_command(init_db_command)
         g.db = db

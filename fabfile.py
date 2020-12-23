@@ -25,5 +25,18 @@ def test(path='.'):
 def bash(service_name):
     local(f'docker exec -it {PROJECT_NAME}_{service_name} bash')
 
+
+def shell():
+    local(f'docker exec -it {PROJECT_NAME}_server poetry run flask shell')
+
+
 def initdb():
-    local(f'docker exec -it {PROJECT_NAME}_server poetry run flask init-db')
+    local(f'docker exec -it {PROJECT_NAME}_server poetry run flask db init')
+
+
+def migrate():
+    local(f'docker exec -it {PROJECT_NAME}_server poetry run flask db migrate')
+
+
+def upgrade():
+    local(f'docker exec -it {PROJECT_NAME}_server poetry run flask db upgrade')
