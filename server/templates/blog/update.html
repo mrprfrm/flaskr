@@ -2,7 +2,7 @@
 {% from 'fields.html' import render_field %}
 
 {% block header %}
-  <h1>{% block title %}Edit "{{ post['title'] }}"{% endblock %}</h1>
+  <h1>{% block title %}Edit "{{ obj.title }}"{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
     <input type="submit" value="Save">
   </form>
   <hr>
-  <form method="post" action="{{ url_for('blog.delete', id=post['id']) }}">
-    <input type="submit" class="danger" value="Delete" onclick="return confirm(('Are you shure?'))">
+  <form method="post" action="{{ url_for('blog.posts_delete', pk=obj.id) }}">
+    <input type="submit" class="danger" value="Delete" onclick="return confirm(('Are you sure?'))">
   </form>
 {% endblock %}

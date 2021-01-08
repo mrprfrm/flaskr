@@ -3,7 +3,7 @@ import os
 from flask import Flask
 
 from db import init_app
-from auth import bluepirnt as auth_blueprint
+from auth import blueprint as auth_blueprint
 from blog import blueprint as blog_blueprint
 
 
@@ -30,6 +30,6 @@ def create_app(config=None):
     init_app(app)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(blog_blueprint)
-    app.add_url_rule('/', endpoint='index')
+    app.add_url_rule('/', endpoint='blog.posts')
 
     return app
