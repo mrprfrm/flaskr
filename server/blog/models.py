@@ -1,6 +1,6 @@
 import datetime
 
-from db import db
+from server.db import db
 from auth.models import User
 
 
