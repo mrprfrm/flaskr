@@ -4,3 +4,6 @@ venv
 __pychache__/
 
 instance/
+
+.coverage
+htmlcov/

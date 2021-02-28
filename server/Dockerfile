@@ -1,10 +1,10 @@
-FROM python:3.7.2-alpine
+FROM python:3.8.8-alpine
 
 USER root
 
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev \
     openssl-dev make
-RUN apk add bash postgresql-dev
+RUN apk add rust cargo bash
 
 RUN pip install --upgrade pip
 RUN pip install poetry

@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from db import init_app
+from .db import init_app
 from auth import blueprint as auth_blueprint
 from blog import blueprint as blog_blueprint
 

@@ -1,7 +1,5 @@
-from flask import render_template, redirect
+from flask import render_template, redirect, g
 from flask.views import MethodView
-
-from db import db
 
 
 class FormView(MethodView):
@@ -71,8 +69,8 @@ class CreateView(FormView, GenericViewMixin):
             entity = self.get_collection()._primary_entity.type
         obj = entity()
         form.populate_obj(obj)
-        db.session.add(obj)
-        db.session.commit()
+        g.db.session.add(obj)
+        g.db.session.commit()
 
 
 class UpdateView(FormView, GenericViewMixin):
@@ -90,7 +88,7 @@ class UpdateView(FormView, GenericViewMixin):
     def perform_post(self, form, **kwargs):
         obj = self.get_obj(**kwargs)
         form.populate_obj(obj)
-        db.session.commit()
+        g.db.session.commit()
 
 
 class DeleteView(MethodView, GenericViewMixin):
@@ -98,6 +96,6 @@ class DeleteView(MethodView, GenericViewMixin):
 
     def post(self, pk):
         obj = self.get_obj(pk=pk)
-        db.session.delete(obj)
-        db.session.commit()
+        g.db.session.delete(obj)
+        g.db.session.commit()
         return redirect(next(self.success_url))
